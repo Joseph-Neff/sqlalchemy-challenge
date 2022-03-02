@@ -35,8 +35,6 @@ def precipitation():
     results = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date >= "2016-08-24").\
         all()
-
-    session.close()
     
     all_prcp = []
     for date,prcp  in results:
@@ -55,8 +53,6 @@ def stations():
 
     results = session.query(Station.station).\
                  order_by(Station.station).all()
-
-    session.close()
 
     all_stations = list(np.ravel(results))
 
