@@ -26,3 +26,27 @@ def welcome():
         f"Temperature from start date(format:yyyy-mm-dd): /api/v1.0/yyyy-mm-dd<br/>"
         f"Temperature from start to end date(format:yyyy-mm-dd): /api/v1.0/yyyy-mm-dd/yyyy-mm-dd<br/>"
         )
+
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+    # Create session
+    session = Session(engine)
+
+    """Return a list of all Precipitation Data"""
+    # Query all Precipitation
+    results = session.query(Measurement.date, Measurement.prcp).\
+        filter(Measurement.date >= "2016-08-24").\
+        all()
+
+    session.close()
+    
+    # Convert list to Dictionary
+    all_prcp = []
+    for date,prcp  in results:
+        prcp_dict = {}
+        prcp_dict["date"] = date
+        prcp_dict["prcp"] = prcp
+               
+        all_prcp.append(prcp_dict)
+
+    return jsonify(all_prcp)
