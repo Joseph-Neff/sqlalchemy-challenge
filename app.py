@@ -64,9 +64,39 @@ def stations():
 
 @app.route("/api/v1.0/tobs")
 def tobs():
+
     one_year = dt.date(2017,8,23) - dt.timedelta(days=365)
+
     tobs_data = session.query(Measurement.date, Measurement.tobs).\
         filter(Measurement.date >= one_year).\
         order_by(Measurement.date).all()
+
     list_tobs_data = list(tobs_data)
+
     return jsonify(list_tobs_data)
+
+@app.route("/api/v1.0/<start>")
+def start_date(start):
+
+    start_date = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= start).\
+        group_by(Measurement.date).all()
+
+    list_start_date = list(start_date)
+
+    return jsonify(list_start_date)
+
+@app.route("/api/v1.0/<start>/<end>")
+def start_end_date(start, end):
+
+    start_end_date = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).\
+        group_by(Measurement.date).all()
+    
+    list_start_end_date = list(start_end_date)
+
+    return jsonify(list_start_end_date)
+
+if __name__ == '__main__':
+    app.run(debug=True)
