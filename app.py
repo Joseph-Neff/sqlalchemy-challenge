@@ -11,8 +11,8 @@ from flask import Flask, jsonify
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 Base = automap_base()
 Base.prepare(engine, reflect=True)
-Station=Base.classes.station
-measurement = Base.classes.measurement
+Station= Base.classes.station
+Measurement = Base.classes.measurement
 
 app = Flask(__name__)
 
