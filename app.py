@@ -51,17 +51,22 @@ def precipitation():
 
 @app.route("/api/v1.0/stations")
 def stations():
-    # Create session
     session = Session(engine)
 
-    """Return a list of all Stations"""
-    # Query all Stations
     results = session.query(Station.station).\
                  order_by(Station.station).all()
 
     session.close()
 
-    # Convert tuples into list
     all_stations = list(np.ravel(results))
 
     return jsonify(all_stations)
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    one_year = dt.date(2017,8,23) - dt.timedelta(days=365)
+    tobs_data = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.date >= one_year).\
+        order_by(Measurement.date).all()
+    list_tobs_data = list(tobs_data)
+    return jsonify(list_tobs_data)
