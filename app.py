@@ -29,18 +29,15 @@ def welcome():
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
-    # Create session
     session = Session(engine)
 
     """Return a list of all Precipitation Data"""
-    # Query all Precipitation
     results = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date >= "2016-08-24").\
         all()
 
     session.close()
     
-    # Convert list to Dictionary
     all_prcp = []
     for date,prcp  in results:
         prcp_dict = {}
@@ -50,3 +47,21 @@ def precipitation():
         all_prcp.append(prcp_dict)
 
     return jsonify(all_prcp)
+
+
+@app.route("/api/v1.0/stations")
+def stations():
+    # Create session
+    session = Session(engine)
+
+    """Return a list of all Stations"""
+    # Query all Stations
+    results = session.query(Station.station).\
+                 order_by(Station.station).all()
+
+    session.close()
+
+    # Convert tuples into list
+    all_stations = list(np.ravel(results))
+
+    return jsonify(all_stations)
